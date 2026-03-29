@@ -1,0 +1,105 @@
+<!Doctype html>
+<html lang="en">
+    <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+                crossorigin="anonymous">
+    </script>
+
+    <link rel="stylesheet" href=https://udayton-cloud.bitbucket.io/style3.css>
+    <style>
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .round {border-radius: 8px;}
+        #response {background-color: #FFD700;}
+    </style>
+    <head>
+        <meta charset="UTF-8">
+        <title>CPS449-Test page of TJ Forsythe</title>
+    </head>
+    <body>
+        <div class="container wrapper">
+            <div id="top">
+                <h1>A test webpage for CPS449</h1>
+                <h2>by TJ Forsythe</h2>
+                
+                
+                
+            </div>
+            
+            <div class="wrapper">
+                
+                <div id="main">
+
+                    <form onsubmit="ConsultAI(); return false;">
+                        <input type="text" id="AiInput" placeholder="Ask me something...">
+                        <input type="submit" value="Submit">
+                    </form>
+                    <div id="AiResponse"></div>
+
+                    <script>
+                        
+                        //should create a post request that can be picked up by the AI microservice(isnt working currently)
+                        //might get swapped out for the Personal project 1 .php method instead
+                        function ConsultAI() {
+                            var input = $("#AiInput").val();
+                            if (input.length === 0) return;
+
+                            
+                            
+                            $("#AiResponse").append("<div><em>Thinking...</em></div>");
+                            
+                            //$.post("URL",
+                            //TODO:its probably encoding the message wrong    
+                            //{messages: JSON.stringify(conversation)},
+                            //        function(result) {
+                            //            conversation.push({ role: "AI", content: result.response });
+                            //            $("#response").html(" " + result.response)
+                            //        }
+                            //);
+                            
+                            //TODO: a different way to send via POST that might work better
+                            $.ajax({
+                                url: "URL",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({ messages: conversation }),
+                                success: function(result) {
+                                    let aiText = result.response || result.text || result.message || result;
+                                    console.log("Response from Gemini:", aiText);
+                                    
+                                    conversation.push({ role: "model", content: aiText });
+
+                                  
+                                },
+                                error: function(err) {
+                                    console.error("Error communicating with AI microservice:", err);
+                                    $("#AiResponse").find("em").parent().html("<strong>Error:</strong> Failed to get response.");
+                                }
+                            });
+
+                            
+                            $("#AiInput").val("");
+                        }
+
+                       
+
+                    
+
+                        
+                    </script>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
