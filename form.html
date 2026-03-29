@@ -41,7 +41,8 @@
             <div class="wrapper">
                 
                 <div id="main">
-
+                    <p>Hello, Welcome to the Course Scheduler, please input the course schedule you are currently following and your current year.</p>
+                    <p>The Ai will generate the best course schedule for next semesters classes</p>
                     <form onsubmit="ConsultAI(); return false;">
                         <input type="text" id="AiInput" placeholder="Ask me something...">
                         <input type="submit" value="Submit">
@@ -49,27 +50,18 @@
                     <div id="AiResponse"></div>
 
                     <script>
+                        let conversation = [];
                         
                         //should create a post request that can be picked up by the AI microservice(isnt working currently)
-                        //might get swapped out for the Personal project 1 .php method instead
                         function ConsultAI() {
                             var input = $("#AiInput").val();
                             if (input.length === 0) return;
 
-                            
+                            conversation.push({ role: "user", content: input });
+                            renderConversation();
                             
                             $("#AiResponse").append("<div><em>Thinking...</em></div>");
                             
-                            //$.post("URL",
-                            //TODO:its probably encoding the message wrong    
-                            //{messages: JSON.stringify(conversation)},
-                            //        function(result) {
-                            //            conversation.push({ role: "AI", content: result.response });
-                            //            $("#response").html(" " + result.response)
-                            //        }
-                            //);
-                            
-                            //TODO: a different way to send via POST that might work better
                             $.ajax({
                                 url: "URL",
                                 method: "POST",
@@ -79,25 +71,34 @@
                                     let aiText = result.response || result.text || result.message || result;
                                     console.log("Response from Gemini:", aiText);
                                     
-                                    conversation.push({ role: "model", content: aiText });
-
-                                  
+                                    conversation.push({ role: "model", content: aiText });  
+                                    renderConversation();
                                 },
                                 error: function(err) {
                                     console.error("Error communicating with AI microservice:", err);
                                     $("#AiResponse").find("em").parent().html("<strong>Error:</strong> Failed to get response.");
                                 }
                             });
-
                             
                             $("#AiInput").val("");
                         }
 
-                       
+                        function renderConversation() {
+                            $("#AiResponse").html(""); // clear
 
-                    
-
-                        
+                            conversation.forEach(msg => {
+                                if (msg.role === "user") {
+                                    $("#AiResponse").append(
+                                        `<div><strong>You:</strong> ${msg.content}</div>`
+                                    );
+                                } else {
+                                    $("#AiResponse").append(
+                                        `<div><strong>AI:</strong> ${msg.content}</div>`
+                                    );
+                                }
+                            });
+                        }
+ 
                     </script>
                 </div>
             </div>
