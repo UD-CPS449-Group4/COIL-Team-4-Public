@@ -1,13 +1,11 @@
 
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-                crossorigin="anonymous">
-    </script>
-
-    <link rel="stylesheet" href=https://udayton-cloud.bitbucket.io/style3.css>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COIL Team 4 Website</title>
+    <link rel="stylesheet" href="https://udayton-cloud.bitbucket.io/style3.css">
     <style>
         .button {
             background-color: #4CAF50; /* Green */
@@ -24,85 +22,73 @@
         .round {border-radius: 8px;}
         #response {background-color: #FFD700;}
     </style>
-    <head>
-        <meta charset="UTF-8">
-        <h1>COIL Team 4 Website</h1>
-        <p>Zoe Sadowski, Edward Kramer, Thomas Forsythe, Jordan Powell, Bui Van Tien Dat, Nguyen Hong Son, Vuong Phi Long</p>
-    </head>
-    <body>
-        <div class="container wrapper">
-            <div id="top">
-                <h1>COIL Team 4 Website</h1>
-                <p>Zoe Sadowski, Edward Kramer, Thomas Forsythe, Jordan Powell, Bui Van Tien Dat, Nguyen Hong Son, Vuong Phi Long</p>
-                
-                
-                
-            </div>
-            
-            <div class="wrapper">
-                
-                <div id="main">
-                    <p>Hello, Welcome to the Course Scheduler, please input the course schedule you are currently following and your current year.</p>
-                    <p>The Ai will generate the best course schedule for next semesters classes</p>
-                    <form onsubmit="ConsultAI(); return false;">
-                        <input type="text" id="AiInput" placeholder="Ask me something...">
-                        <input type="submit" value="Submit">
-                    </form>
-                    <div id="AiResponse"></div>
+    <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container wrapper">
+        <div id="top">
+            <h1>COIL Team 4 Website</h1>
+            <p>Zoe Sadowski, Edward Kramer, Thomas Forsythe, Jordan Powell, Bui Van Tien Dat, Nguyen Hong Son, Vuong Phi Long</p>
+        </div>
 
-                    <script>
-                        let conversation = [];
-                        
-                        //should create a post request that can be picked up by the AI microservice(isnt working currently)
-                        function ConsultAI() {
-                            var input = $("#AiInput").val();
-                            if (input.length === 0) return;
+        <div class="wrapper">
+            <div id="main">
+                <p>Hello, welcome to the Course Scheduler. Please input the course schedule you are currently following and your current year.</p>
+                <p>The AI will generate the best course schedule for next semester's classes.</p>
 
-                            conversation.push({ role: "user", content: input });
-                            renderConversation();
-                            
-                            $("#AiResponse").append("<div><em>Thinking...</em></div>");
-                            
-                            $.ajax({
-                                url: "URL",
-                                method: "POST",
-                                contentType: "application/json",
-                                data: JSON.stringify({ messages: conversation }),
-                                success: function(result) {
-                                    let aiText = result.response || result.text || result.message || result;
-                                    console.log("Response from Gemini:", aiText);
-                                    
-                                    conversation.push({ role: "model", content: aiText });  
-                                    renderConversation();
-                                },
-                                error: function(err) {
-                                    console.error("Error communicating with AI microservice:", err);
-                                    $("#AiResponse").find("em").parent().html("<strong>Error:</strong> Failed to get response.");
-                                }
-                            });
-                            
-                            $("#AiInput").val("");
-                        }
+                <form onsubmit="ConsultAI(); return false;">
+                    <input type="text" id="AiInput" placeholder="Ask me something...">
+                    <input type="submit" value="Submit">
+                </form>
+                <div id="AiResponse"></div>
 
-                        function renderConversation() {
-                            $("#AiResponse").html(""); // clear
+                <script>
+                    let conversation = [];
 
-                            conversation.forEach(msg => {
-                                if (msg.role === "user") {
-                                    $("#AiResponse").append(
-                                        `<div><strong>You:</strong> ${msg.content}</div>`
-                                    );
-                                } else {
-                                    $("#AiResponse").append(
-                                        `<div><strong>AI:</strong> ${msg.content}</div>`
-                                    );
-                                }
-                            });
-                        }
- 
-                    </script>
-                </div>
+                    function ConsultAI() {
+                        const input = $("#AiInput").val();
+                        if (!input) return;
+
+                        conversation.push({ role: "user", content: input });
+                        renderConversation();
+                        $("#AiResponse").append("<div><em>Thinking...</em></div>");
+
+                        $.ajax({
+                            url: "URL",
+                            method: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({ messages: conversation }),
+                            success: function(result) {
+                                const aiText = result.response || result.text || result.message || result;
+                                console.log("Response from AI service:", aiText);
+                                conversation.push({ role: "model", content: aiText });
+                                renderConversation();
+                            },
+                            error: function(err) {
+                                console.error("Error communicating with AI microservice:", err);
+                                $("#AiResponse").find("em").parent().html("<strong>Error:</strong> Failed to get response.");
+                            }
+                        });
+
+                        $("#AiInput").val("");
+                    }
+
+                    function renderConversation() {
+                        $("#AiResponse").html("");
+                        conversation.forEach(msg => {
+                            if (msg.role === "user") {
+                                $("#AiResponse").append(`<div><strong>You:</strong> ${msg.content}</div>`);
+                            } else {
+                                $("#AiResponse").append(`<div><strong>AI:</strong> ${msg.content}</div>`);
+                            }
+                        });
+                    }
+                </script>
             </div>
         </div>
-    </body>
-    </html>
+    </div>
+</body>
+</html>
