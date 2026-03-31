@@ -57,7 +57,7 @@
                         $("#AiResponse").append("<div><em>Thinking...</em></div>");
 
                         $.ajax({
-                            url: "https://cps449-group04-coursecatalog-microservice.azurewebsites.net",
+                            url: "https://cps449-group04-coursecatalog-microservice.azurewebsites.net/conversation",
                             method: "POST",
                             contentType: "application/json",
                             data: JSON.stringify({ messages: conversation }),
