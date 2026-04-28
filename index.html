@@ -1,94 +1,365 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COIL Team 4 Website</title>
-    <link rel="stylesheet" href="https://udayton-cloud.bitbucket.io/style3.css">
-    <style>
-        .button {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 5px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-        .round {border-radius: 8px;}
-        #response {background-color: #FFD700;}
-    </style>
+    <title>COIL Team 4 — Course Scheduler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-            crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --ud-red: #CE1141;
+            --ud-red-dark: #A30D33;
+            --ud-blue: #004B8D;
+            --ud-blue-dark: #00305B;
+            --ud-cream: #FAF2F3;
+            --ud-sand: #D1CDB8;
+            --ink: #1A1A1A;
+            --muted: #5A5A5A;
+            --line: rgba(0, 75, 141, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--ud-cream);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 10%, rgba(206, 17, 65, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(0, 75, 141, 0.05) 0%, transparent 40%);
+        }
+
+        /* Top accent bar */
+        .accent-bar {
+            height: 6px;
+            background: linear-gradient(90deg,
+                var(--ud-red) 0%,
+                var(--ud-red) 50%,
+                var(--ud-blue) 50%,
+                var(--ud-blue) 100%);
+        }
+
+        /* Header */
+        header {
+            background: var(--ud-blue);
+            color: white;
+            padding: 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 12px,
+                    rgba(255, 255, 255, 0.04) 12px,
+                    rgba(255, 255, 255, 0.04) 24px
+                );
+            pointer-events: none;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .eyebrow::before {
+            content: '';
+            width: 28px;
+            height: 2px;
+            background: var(--ud-red);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 .highlight {
+            color: #FFD700;
+            font-style: italic;
+        }
+
+        .header-sub {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        /* Section heading */
+        .section-heading {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--ud-red);
+            padding-bottom: 0.75rem;
+        }
+
+        .section-heading h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--ud-blue);
+            letter-spacing: -0.01em;
+        }
+
+        .section-heading .count {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Team grid */
+        .team-section {
+            margin-bottom: 3rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .team-member {
+            background: white;
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--ud-red);
+            padding: 1rem 1.1rem;
+            border-radius: 4px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .team-member:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 75, 141, 0.1);
+            border-left-color: var(--ud-blue);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ud-blue) 0%, var(--ud-red) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .member-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.3;
+        }
+
+        /* Intro text above iframe */
+        .intro {
+            background: white;
+            border-radius: 8px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--line);
+            position: relative;
+        }
+
+        .intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2rem;
+            width: 40px;
+            height: 4px;
+            background: var(--ud-red);
+            border-radius: 0 0 2px 2px;
+        }
+
+        .intro p {
+            color: var(--ink);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro p:last-child {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* Iframe wrapper */
+        .chat-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid var(--line);
+            box-shadow: 0 4px 24px rgba(0, 75, 141, 0.08);
+        }
+
+        .chat-wrapper iframe {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            max-height: 100vh;
+            border-radius: 6px;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--ud-blue-dark);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        footer strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 2rem 1.25rem;
+            }
+            .container {
+                padding: 2rem 1.25rem 3rem;
+            }
+            .intro {
+                padding: 1.25rem;
+            }
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container wrapper">
-        <div id="top">
-            <h1>COIL Team 4 Website</h1>
-            <p>Zoe Sadowski, Edward Kramer, Thomas Forsythe, Jordan Powell, Bui Van Tien Dat, Nguyen Hong Son, Vuong Phi Long</p>
+    <div class="accent-bar"></div>
+
+    <header>
+        <div class="header-inner">
+            <div class="eyebrow">University of Dayton · COIL Team 4</div>
+            <h1>Course <span class="highlight">Scheduler</span></h1>
+            <p class="header-sub">An AI-powered scheduling assistant built collaboratively with international partners.</p>
         </div>
+    </header>
 
-        <div class="wrapper">
-            <div id="main">
-                <p>Hello, welcome to the Course Scheduler. Please input the course schedule you are currently following and your current year.</p>
-                <p>The AI will generate the best course schedule for next semester's classes.</p>
-
-                <form onsubmit="ConsultAI(); return false;">
-                    <input type="text" id="AiInput" placeholder="Ask me something...">
-                    <input type="submit" value="Submit">
-                </form>
-                <div id="AiResponse"></div>
-
-                <script>
-                    let conversation = [];
-
-                    function ConsultAI() {
-                        const input = $("#AiInput").val();
-                        if (!input) return;
-
-                        conversation.push({ role: "user", content: input });
-                        renderConversation();
-                        $("#AiResponse").append("<div><em>Thinking...</em></div>");
-
-                        $.ajax({
-                            url: "https://cps449-group04-coursecatalog-microservice.azurewebsites.net/conversation",
-                            method: "POST",
-                            contentType: "application/json",
-                            data: JSON.stringify({ messages: conversation }),
-                            success: function(result) {
-                                const aiText = result.response || result.text || result.message || result;
-                                console.log("Response from AI service:", aiText);
-                                conversation.push({ role: "model", content: aiText });
-                                renderConversation();
-                            },
-                            error: function(err) {
-                                console.error("Error communicating with AI microservice:", err);
-                                $("#AiResponse").find("em").parent().html("<strong>Error:</strong> Failed to get response.");
-                            }
-                        });
-
-                        $("#AiInput").val("");
-                    }
-
-                    function renderConversation() {
-                        $("#AiResponse").html("");
-                        conversation.forEach(msg => {
-                            if (msg.role === "user") {
-                                $("#AiResponse").append(`<div><strong>You:</strong> ${msg.content}</div>`);
-                            } else {
-                                $("#AiResponse").append(`<div><strong>AI:</strong> ${msg.content}</div>`);
-                            }
-                        });
-                    }
-                </script>
+    <main class="container">
+        <section class="team-section">
+            <div class="section-heading">
+                <h2>Our Team</h2>
+                <span class="count">07 Members</span>
             </div>
-        </div>
-    </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="avatar">ZS</div>
+                    <div class="member-name">Zoe Sadowski</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">EK</div>
+                    <div class="member-name">Edward Kramer</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">TF</div>
+                    <div class="member-name">Thomas Forsythe</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">JP</div>
+                    <div class="member-name">Jordan Powell</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">BD</div>
+                    <div class="member-name">Bui Van Tien Dat</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">NS</div>
+                    <div class="member-name">Nguyen Hong Son</div>
+                </div>
+                <div class="team-member">
+                    <div class="avatar">VL</div>
+                    <div class="member-name">Vuong Phi Long</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-heading">
+                <h2>Try It Out</h2>
+                <span class="count">Live Demo</span>
+            </div>
+
+            <div class="intro">
+                <p>Welcome to the Course Scheduler. Input the courses you're currently taking along with your year, and the AI will suggest the best schedule for next semester.</p>
+                <p>Powered by FlyerGPT and integrated directly below.</p>
+            </div>
+
+            <div class="chat-wrapper">
+                <iframe
+                    src="https://flyergpt.udayton.edu/chat/4b271fad-058c-40f8-b037-cd324d504c24?embed=true&silentLogin=true"
+                    title="Private Chat"
+                    loading="lazy"
+                    allow="microphone">
+                </iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <strong>COIL Team 4</strong> &nbsp;·&nbsp; University of Dayton &nbsp;·&nbsp; Spring 2026
+    </footer>
 </body>
 </html>
