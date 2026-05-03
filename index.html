@@ -435,8 +435,8 @@
         }
 
         .avatar {
-            width: 38px;
-            height: 38px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--ud-blue) 0%, var(--ud-red) 100%);
             color: white;
@@ -447,6 +447,15 @@
             font-size: 0.85rem;
             flex-shrink: 0;
             letter-spacing: 0.02em;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 50%;
         }
 
         .member-name {
@@ -766,19 +775,19 @@
                 </div>
                 <div class="team-grid">
                     <div class="team-member">
-                        <div class="avatar">ZS</div>
+                        <div class="avatar"><img src="https://raw.githubusercontent.com/UD-CPS449-Group4/COIL-Team-4-Public/main/zoe_sadowski.jpg" alt="Zoe Sadowski"></div>
                         <div class="member-name">Zoe Sadowski</div>
                     </div>
                     <div class="team-member">
-                        <div class="avatar">EK</div>
+                        <div class="avatar"><img src="https://raw.githubusercontent.com/UD-CPS449-Group4/COIL-Team-4-Public/main/Quad_Kramer_Headshot.jpg" alt="Edward Kramer"></div>
                         <div class="member-name">Edward Kramer</div>
                     </div>
                     <div class="team-member">
-                        <div class="avatar">TF</div>
+                        <div class="avatar"><img src="https://raw.githubusercontent.com/UD-CPS449-Group4/COIL-Team-4-Public/main/TJ_Forsythe_Headshot.jpg" alt="Thomas Forsythe"></div>
                         <div class="member-name">Thomas Forsythe</div>
                     </div>
                     <div class="team-member">
-                        <div class="avatar">JP</div>
+                        <div class="avatar"><img src="https://raw.githubusercontent.com/UD-CPS449-Group4/COIL-Team-4-Public/main/Jordan_powell.jpg" alt="Jordan Powell"></div>
                         <div class="member-name">Jordan Powell</div>
                     </div>
                 </div>
@@ -790,11 +799,14 @@
                     <span class="count">Walkthrough</span>
                 </div>
                 <div class="video-frame">
-                    <div class="video-placeholder">
-                        <div class="play-button"></div>
-                        <div class="video-placeholder-text">Demo Coming Soon</div>
-                        <div class="video-placeholder-sub">Video walkthrough will be embedded here</div>
-                    </div>
+                    <video
+                        controls
+                        preload="metadata"
+                        style="width: 100%; border-radius: 6px; display: block; aspect-ratio: 16/9; background: #000;"
+                        poster="">
+                        <source src="https://raw.githubusercontent.com/UD-CPS449-Group4/COIL-Team-4-Public/main/CPS449_Demo_CUT.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
 
                 <div class="cta-card">
